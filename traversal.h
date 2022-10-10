@@ -13,7 +13,13 @@
 
 #include "string.h"
 
+typedef struct FileStruct{
+  char* path;
+  struct FileStruct* next;
+} FileStruct_t;
 
-int getAllFiles(const char* path);
+void fileStructPush(FileStruct_t* head, const char* path);
+
+FileStruct_t* getAllFiles(const char* path, FileStruct_t* head);
 
 #endif //COMP348_SEARCH_AND_REPLACE_TRAVERSAL_H
