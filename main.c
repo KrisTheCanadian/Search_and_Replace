@@ -4,6 +4,7 @@
 
 #include "traversal.h"
 #include "text.h"
+#include "report.h"
 
 
 typedef struct FileStruct FileStruct;
@@ -29,13 +30,18 @@ int main(int argc, char *argv[]) {
   FileStruct_t* node = head;
   getAllFiles(absolutePath, node);
 
-  free(absolutePath);
+
+
   // look in all the files ending with a .txt
-  node = head;
-  parseFiles(node, argv[1]);
   // replace all files string to upper
+  parseFiles(node, argv[1]);
 
   // report changes
+  printf("Target string: \t%s", argv[1]);
+  printf("Search begins in current folder: %s", absolutePath);
+  puts("\n");
+  report(node);
 
+  free(absolutePath);
   return 0;
 }
