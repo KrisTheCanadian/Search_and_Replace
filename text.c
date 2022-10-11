@@ -6,10 +6,45 @@
 #include "text.h"
 #include "replace.h"
 
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 1024
+const long MAX_BUFFER_SIZE = 1024 * 1024;
+
+char* getNextLine(FILE* fileHandle){
+  int currentBufferSize = BUFFER_SIZE;
+  char* line = (char*)malloc(sizeof(char) * currentBufferSize);
+  memset(line, 1, sizeof(char) * currentBufferSize);
+
+  while (1){
+    long currentPos = ftell(fileHandle);
+    if (fgets(line, currentBufferSize - 1, fileHandle) == NULL){
+      if (!feof(fileHandle)){
+        puts("Error reading the file");
+      }
+      return NULL;
+    }
+
+    if (line[currentBufferSize - 1] == '\0' && line[currentBufferSize - 2] != '\n'){
+      // we need a bigger buffer
+      currentBufferSize += BUFFER_SIZE;
+      if (currentBufferSize > MAX_BUFFER_SIZE){
+        printf("Reached max buffer size...");
+        exit(-1);
+      }
+
+      line = (char*) realloc((void*)line, sizeof(char) * currentBufferSize);
+      memset(line, 1, sizeof(char) * currentBufferSize);
+
+      fseek(fileHandle, currentPos, SEEK_SET);
+      continue;
+    }
+
+    return line;
+  }
+
+}
 
 FileStruct_t *parseFiles(FileStruct_t *files, char *target) {
-  char inputBuffer[BUFFER_SIZE];
+  //char inputBuffer[BUFFER_SIZE];
   char outputBuffer[BUFFER_SIZE];
 
   while(files->next){
@@ -36,20 +71,19 @@ FileStruct_t *parseFiles(FileStruct_t *files, char *target) {
       exit(EXIT_FAILURE);
     }
 
-
-
-    while(fgets( inputBuffer, BUFFER_SIZE - 1, in ) != NULL){
-      char* ret = strstr(inputBuffer, target);
+    char* line = NULL;
+    while ((line = getNextLine(in))){
+      char* ret = strstr(line, target);
       if(!ret) {
-        strcpy(outputBuffer, inputBuffer);
-        fputs(outputBuffer, out);
+        fputs(line, out);
       } else {
-        replaceLine(inputBuffer, replacementString, target, (unsigned int) (ret - inputBuffer), &changes);
+        replaceLine(line, replacementString, target, (unsigned int) (ret - line), &changes);
         // do the replacements on the line buffer
-        fputs(inputBuffer, out);
+        fputs(line, out);
       }
-
+      free(line);
     }
+
     files->changes = changes;
     fclose(in);
     fclose(out);
