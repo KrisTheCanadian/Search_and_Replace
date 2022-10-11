@@ -68,7 +68,10 @@ void report(FileStruct_t* node, char* absolutePath, char* target){
   printf("** Search Report **");
   puts("\n");
   puts("Updates\t\t File Name");
-
+  if(fileStructArray == NULL){
+    // nothing to report
+    return;
+  }
   FileStruct_t** files = fileStructArray->fileArray;
   for(size_t i = fileStructArray->size -1; i > 0; i--){
     if(files[i]->changes > 0){
