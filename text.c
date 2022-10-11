@@ -42,16 +42,19 @@ FileStruct_t *parseFiles(FileStruct_t *files, char *target) {
       char* ret = strstr(inputBuffer, target);
       if(!ret) {
         strcpy(outputBuffer, inputBuffer);
+        fputs(outputBuffer, out);
       } else {
         replaceLine(inputBuffer, replacementString, target, (unsigned int) (ret - inputBuffer), &changes);
         // do the replacements on the line buffer
+        fputs(inputBuffer, out);
       }
-      fputs(outputBuffer, out);
+
     }
     files->changes = changes;
     fclose(in);
-    rename(tempFile, files->path);
     fclose(out);
+    rename(tempFile, files->path);
+    remove(tempFile);
     free(replacementString);
     free(tempFile);
   }
