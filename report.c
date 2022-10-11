@@ -12,7 +12,7 @@ typedef struct FileStructArray{
 
 size_t countLinkedList(FileStruct_t* head){
   size_t count = 0;
-  while(head->next != NULL){
+  while(head != NULL){
     count++;
     head = head->next;
   }
@@ -80,14 +80,14 @@ void report(FileStruct_t* node, char* absolutePath, char* target){
 
   puts("Updates\t\t File Name");
 
-  FileStruct_t** files = fileStructArray->fileArray;
-  for(size_t i = fileStructArray->size -1; i > 0; i--){
-    if(files[i] && files[i]->changes > 0){
-      printf("%d\t\t %s\n", files[i]->changes, files[i]->path + strlen(absolutePath) + 1);
+  for(size_t i = fileStructArray->size; i > 0; i--){
+    FileStruct_t* file = fileStructArray->fileArray[i - 1];
+    if(file &&  file->changes > 0){
+      printf("%d\t\t %s\n", file->changes, file->path + strlen(absolutePath) + 1);
     }
   }
   puts("\n");
 
+  free(fileStructArray->fileArray);
   free(fileStructArray);
-  free(files);
 }
