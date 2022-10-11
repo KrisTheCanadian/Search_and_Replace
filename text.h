@@ -8,5 +8,7 @@
 #include "traversal.h"
 
 FileStruct_t *parseFiles(FileStruct_t *files, char *target);
+char* getNextLine(FILE* fileHandle);
+FileStruct_t *parseFiles(FileStruct_t *files, char *target);
 
 #endif //COMP348_SEARCH_AND_REPLACE_TEXT_H

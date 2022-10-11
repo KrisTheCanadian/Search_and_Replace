@@ -3,50 +3,15 @@
 //
 
 #include <stdlib.h>
+
 #include "text.h"
 #include "replace.h"
+#include "traversal.h"
 
 #define BUFFER_SIZE 1024
 const long MAX_BUFFER_SIZE = 1024 * 1024;
 
-char* getNextLine(FILE* fileHandle){
-  int currentBufferSize = BUFFER_SIZE;
-  char* line = (char*)malloc(sizeof(char) * currentBufferSize);
-  memset(line, 1, sizeof(char) * currentBufferSize);
-
-  while (1){
-    long currentPos = ftell(fileHandle);
-    if (fgets(line, currentBufferSize - 1, fileHandle) == NULL){
-      if (!feof(fileHandle)){
-        puts("Error reading the file");
-      }
-      return NULL;
-    }
-
-    if (line[currentBufferSize - 1] == '\0' && line[currentBufferSize - 2] != '\n'){
-      // we need a bigger buffer
-      currentBufferSize += BUFFER_SIZE;
-      if (currentBufferSize > MAX_BUFFER_SIZE){
-        printf("Reached max buffer size...");
-        exit(-1);
-      }
-
-      line = (char*) realloc((void*)line, sizeof(char) * currentBufferSize);
-      memset(line, 1, sizeof(char) * currentBufferSize);
-
-      fseek(fileHandle, currentPos, SEEK_SET);
-      continue;
-    }
-
-    return line;
-  }
-
-}
-
 FileStruct_t *parseFiles(FileStruct_t *files, char *target) {
-  //char inputBuffer[BUFFER_SIZE];
-  char outputBuffer[BUFFER_SIZE];
-
   while(files->next){
     unsigned int changes = 0;
     char* replacementString = getReplacementString(target);
@@ -92,4 +57,40 @@ FileStruct_t *parseFiles(FileStruct_t *files, char *target) {
     free(replacementString);
     free(tempFile);
   }
+  return NULL;
 }
+
+char* getNextLine(FILE* fileHandle){
+  int currentBufferSize = BUFFER_SIZE;
+  char* line = (char*)malloc(sizeof(char) * currentBufferSize);
+  memset(line, 1, sizeof(char) * currentBufferSize);
+
+  while (1){
+    long currentPos = ftell(fileHandle);
+    if (fgets(line, currentBufferSize - 1, fileHandle) == NULL){
+      if (!feof(fileHandle)){
+        puts("Error reading the file");
+      }
+      return NULL;
+    }
+
+    if (line[currentBufferSize - 1] == '\0' && line[currentBufferSize - 2] != '\n'){
+      // we need a bigger buffer
+      currentBufferSize += BUFFER_SIZE;
+      if (currentBufferSize > MAX_BUFFER_SIZE){
+        printf("Reached max buffer size...");
+        exit(-1);
+      }
+
+      line = (char*) realloc((void*)line, sizeof(char) * currentBufferSize);
+      memset(line, 1, sizeof(char) * currentBufferSize);
+
+      fseek(fileHandle, currentPos, SEEK_SET);
+      continue;
+    }
+
+    return line;
+  }
+
+}
+

@@ -2,5 +2,7 @@
 /cmake-build-debug/
 build/*
 
+a.out
+
 # Idea
 .idea
