@@ -62,12 +62,13 @@ FileStructArray_t* sort(FileStruct_t* node){
 
 void report(FileStruct_t* node, char* absolutePath, char* target){
   FileStructArray_t* fileStructArray = sort(node);
+
+  printf("Target string: \t%s\n", target);
+  printf("Search begins in current folder: %s\n\n", absolutePath);
   printf("** Search Report **");
   puts("\n");
   puts("Updates\t\t File Name");
 
-  printf("Target string: \t%s", target);
-  printf("Search begins in current folder: %s\n", absolutePath);
   FileStruct_t** files = fileStructArray->fileArray;
   for(size_t i = fileStructArray->size -1; i > 0; i--){
     if(files[i]->changes > 0){
