@@ -67,11 +67,19 @@ void report(FileStruct_t* node, char* absolutePath, char* target){
   printf("Search begins in current folder: %s\n\n", absolutePath);
   printf("** Search Report **");
   puts("\n");
-  puts("Updates\t\t File Name");
+
   if(fileStructArray == NULL){
-    // nothing to report
+    puts("No files to report.");
     return;
   }
+
+  if(fileStructArray->size == 0){
+    puts("No files to report.");
+    return;
+  }
+
+  puts("Updates\t\t File Name");
+
   FileStruct_t** files = fileStructArray->fileArray;
   for(size_t i = fileStructArray->size -1; i > 0; i--){
     if(files[i] && files[i]->changes > 0){
