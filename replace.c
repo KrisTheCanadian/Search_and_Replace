@@ -35,7 +35,14 @@ int main(int argc, char *argv[]) {
   FileStruct_t* node = head;
   getAllFiles(absolutePath, node);
 
-
+  if(node->next == NULL){
+    // no files to report
+    printf("Target string: \t%s\n", argv[1]);
+    printf("Search begins in current folder: %s\n\n", absolutePath);
+    printf("** Search Report **");
+    puts("\n");
+    puts("No files to report.");
+  }
 
   // look in all the files ending with a .txt
   // replace all files string to upper

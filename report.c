@@ -74,7 +74,7 @@ void report(FileStruct_t* node, char* absolutePath, char* target){
   }
   FileStruct_t** files = fileStructArray->fileArray;
   for(size_t i = fileStructArray->size -1; i > 0; i--){
-    if(files[i]->changes > 0){
+    if(files[i] && files[i]->changes > 0){
       printf("%d\t\t %s\n", files[i]->changes, files[i]->path + strlen(absolutePath) + 1);
     }
   }
