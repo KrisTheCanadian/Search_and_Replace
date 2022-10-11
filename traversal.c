@@ -17,7 +17,7 @@ void fileStructPush(FileStruct_t* head, const char* path){
   current->next->next = NULL;
 }
 
-struct FileStruct* getAllFiles(const char* path, FileStruct_t* node){
+struct FileStruct* getAllFiles(const char* path, FileStruct_t* outNode){
   DIR* folder;
   struct dirent *entry;
   struct stat filestat;
@@ -50,20 +50,16 @@ struct FileStruct* getAllFiles(const char* path, FileStruct_t* node){
       if(!ext){ continue; }
       if(strcmp(ext, ".txt") != 0){ continue; }
 
-      fileStructPush(node, pathWithName);
-
-
-      printf("FILE %s\n", entry->d_name);
+      fileStructPush(outNode, pathWithName);
     } else if(S_ISDIR(filestat.st_mode)) {
       if(strcmp(entry->d_name, "..") == 0){ continue; }
       if(strcmp(entry->d_name, ".") == 0) { continue; }
-      printf("RECURSIVE DIR %s\n", entry->d_name);
 
       char* newPath = NULL;
       newPath = malloc(strlen(pathWithName) + 1);
       strcpy(newPath, pathWithName);
 
-      getAllFiles(newPath, node);
+      getAllFiles(newPath, outNode);
       free(newPath);
     }
     free(pathWithName);

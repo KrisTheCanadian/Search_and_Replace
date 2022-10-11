@@ -16,10 +16,11 @@
 typedef struct FileStruct{
   char* path;
   struct FileStruct* next;
+  unsigned int changes;
 } FileStruct_t;
 
 void fileStructPush(FileStruct_t* head, const char* path);
 
-FileStruct_t* getAllFiles(const char* path, FileStruct_t* head);
+FileStruct_t* getAllFiles(const char* path, FileStruct_t* outNode);
 
 #endif //COMP348_SEARCH_AND_REPLACE_TRAVERSAL_H
