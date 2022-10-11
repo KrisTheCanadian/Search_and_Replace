@@ -32,12 +32,12 @@ FileStructArray_t* createArrayOfPointers(FileStruct_t* head, size_t size){
 }
 
 int compare_data(const void* _a, const void* _b){
-  struct FileStruct *ptrToLeftStruct = (struct FileStruct *) _a;
-  struct FileStruct *ptrToRightStruct = (struct FileStruct *) _b;
+  FileStruct_t **ptrToLeftStruct = (FileStruct_t **) _a;
+  FileStruct_t **ptrToRightStruct = (FileStruct_t **) _b;
 
-  if ((ptrToLeftStruct)->changes < (ptrToRightStruct)->changes)
+  if ((*ptrToLeftStruct)->changes < (*ptrToRightStruct)->changes)
     return -1;
-  else if ((ptrToLeftStruct)->changes > (ptrToRightStruct)->changes)
+  else if ((*ptrToLeftStruct)->changes > (*ptrToRightStruct)->changes)
     return 1;
   else
     return 0;
@@ -60,15 +60,19 @@ FileStructArray_t* sort(FileStruct_t* node){
   return fileStructArray;
 }
 
-void report(FileStruct_t* node){
+void report(FileStruct_t* node, char* absolutePath, char* target){
   FileStructArray_t* fileStructArray = sort(node);
   printf("** Search Report **");
   puts("\n");
   puts("Updates\t\t File Name");
 
+  printf("Target string: \t%s", target);
+  printf("Search begins in current folder: %s\n", absolutePath);
   FileStruct_t** files = fileStructArray->fileArray;
   for(size_t i = fileStructArray->size -1; i > 0; i--){
-    printf("%d\t\t %s\n", files[i]->changes, files[i]->path);
+    if(files[i]->changes > 0){
+      printf("%d\t\t %s\n", files[i]->changes, files[i]->path + strlen(absolutePath) + 1);
+    }
   }
   puts("\n");
 

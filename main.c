@@ -37,11 +37,9 @@ int main(int argc, char *argv[]) {
   parseFiles(node, argv[1]);
 
   // report changes
-  printf("Target string: \t%s", argv[1]);
-  printf("Search begins in current folder: %s", absolutePath);
-  puts("\n");
-  report(node);
+  report(node, absolutePath, argv[1]);
 
   free(absolutePath);
+  free(head);
   return 0;
 }
